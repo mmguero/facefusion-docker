@@ -16,6 +16,12 @@ Clone the repository:
 git clone https://github.com/facefusion/facefusion-docker.git
 ```
 
+Set your UID (`id -u`) and GID (`id -g`) in `.env` to run facefusion as an unprivileged user:
+
+```
+echo -e "PUID=$(id -u)\nPGID=$(id -g)" > .env
+```
+
 Run the `CPU` container:
 
 ```

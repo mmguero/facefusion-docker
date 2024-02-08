@@ -40,7 +40,7 @@ RUN groupadd --gid ${DEFAULT_GID} ${PGROUP} && \
     useradd -m --uid ${DEFAULT_UID} --gid ${DEFAULT_GID} --home /home/${PUSER} ${PUSER} && \
     usermod -a -G tty ${PUSER} && \
     chsh -s /bin/bash ${PUSER} && \
-    chown -R chown -R ${PUSER}:${PGROUP} /facefusion
+    chown -R ${PUSER}:${PGROUP} /facefusion
 
 ADD --chmod=755 docker-uid-gid-setup.sh /usr/local/bin/docker-uid-gid-setup.sh
 

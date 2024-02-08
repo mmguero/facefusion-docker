@@ -4,9 +4,6 @@ services:
    context: .
    dockerfile: Dockerfile.cpu
   command: [ 'python', 'run.py' ]
-  environment:
-    PUID: 1000
-    PGID: 1000
   env_file: .env
   volumes:
   - .assets:/facefusion/.assets
