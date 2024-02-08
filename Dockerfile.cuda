@@ -1,7 +1,20 @@
 FROM nvidia/cuda:11.8.0-cudnn8-runtime-ubuntu22.04
 
+ARG DEFAULT_UID=1000
+ARG DEFAULT_GID=1000
+ENV DEFAULT_UID $DEFAULT_UID
+ENV DEFAULT_GID $DEFAULT_GID
+ENV PUSER "fusion"
+ENV PGROUP "fusion"
+ENV PUSER_PRIV_DROP true
+ENV PUSER_RLIMIT_UNLOCK true
+
 ARG FACEFUSION_VERSION=2.2.1
 ENV GRADIO_SERVER_NAME=0.0.0.0
+ENV NVIDIA_VISIBLE_DEVICES all
+ENV NVIDIA_DRIVER_CAPABILITIES compute,utility,video
+ENV CUDA_DEVICE_ORDER FASTEST_FIRST
+ENV CUDA_VISIBLE_DEVICES 0
 
 WORKDIR /facefusion
 
@@ -9,11 +22,26 @@ RUN apt-get update
 RUN apt-get install python3.10 -y
 RUN apt-get install python-is-python3 -y
 RUN apt-get install pip -y
+RUN apt-get install patch -y
 RUN apt-get install git -y
 RUN apt-get install curl -y
 RUN apt-get install ffmpeg -y
+RUN apt-get install tini -y
+
+ADD --chmod=644 .patch/* /tmp/patch/
 
 RUN git clone https://github.com/facefusion/facefusion.git --branch ${FACEFUSION_VERSION} --single-branch .
+RUN bash -c 'for i in /tmp/patch/*.patch; do patch -p 1 -r - --no-backup-if-mismatch < $i || true; done'
 RUN python install.py --torch cuda --onnxruntime cuda --skip-venv
 
 RUN cd /usr/local/lib/python3.10/dist-packages/torch/lib && ln -s libnvrtc-672ee683.so.11.2 libnvrtc.so
+
+RUN groupadd --gid ${DEFAULT_GID} ${PGROUP} && \
+    useradd -m --uid ${DEFAULT_UID} --gid ${DEFAULT_GID} --home /home/${PUSER} ${PUSER} && \
+    usermod -a -G tty ${PUSER} && \
+    chsh -s /bin/bash ${PUSER} && \
+    chown -R chown -R ${PUSER}:${PGROUP} /facefusion
+
+ADD --chmod=755 docker-uid-gid-setup.sh /usr/local/bin/docker-uid-gid-setup.sh
+
+ENTRYPOINT ["/usr/bin/tini", "--", "/usr/local/bin/docker-uid-gid-setup.sh"]

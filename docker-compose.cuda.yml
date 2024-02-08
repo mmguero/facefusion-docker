@@ -4,10 +4,14 @@ services:
    context: .
    dockerfile: Dockerfile.cuda
   command: [ 'python', 'run.py', '--execution-providers', 'cuda' ]
+  environment:
+    PUID: 1000
+    PGID: 1000
+  env_file: .env
   volumes:
   - .assets:/facefusion/.assets
   ports:
-  - 7880:7860
+  - 127.0.0.1:7880:7860
   deploy:
    resources:
     reservations:
