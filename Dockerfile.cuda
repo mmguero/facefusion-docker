@@ -9,7 +9,7 @@ ENV PGROUP "fusion"
 ENV PUSER_PRIV_DROP true
 ENV PUSER_RLIMIT_UNLOCK true
 
-ARG FACEFUSION_VERSION=2.3.0
+ARG FACEFUSION_VERSION=2.4.1
 ENV GRADIO_SERVER_NAME=0.0.0.0
 ENV NVIDIA_VISIBLE_DEVICES all
 ENV NVIDIA_DRIVER_CAPABILITIES compute,utility,video
@@ -32,7 +32,7 @@ ADD --chmod=644 .patch/* /tmp/patch/
 
 RUN git clone https://github.com/facefusion/facefusion.git --branch ${FACEFUSION_VERSION} --single-branch .
 RUN bash -c 'for i in /tmp/patch/*.patch; do patch -p 1 -r - --no-backup-if-mismatch < $i || true; done'
-RUN python install.py --torch cuda-11.8 --onnxruntime cuda-11.8 --skip-venv
+RUN python install.py --onnxruntime cuda-11.8 --skip-venv
 
 RUN cd /usr/local/lib/python3.10/dist-packages/torch/lib && ln -s libnvrtc-672ee683.so.11.2 libnvrtc.so
 
