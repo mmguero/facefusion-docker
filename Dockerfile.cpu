@@ -9,7 +9,7 @@ ENV PGROUP "fusion"
 ENV PUSER_PRIV_DROP true
 ENV PUSER_RLIMIT_UNLOCK true
 
-ARG FACEFUSION_VERSION=2.4.1
+ARG FACEFUSION_VERSION=2.5.0
 ENV GRADIO_SERVER_NAME=0.0.0.0
 
 WORKDIR /facefusion
@@ -24,7 +24,7 @@ ADD --chmod=644 .patch/* /tmp/patch/
 
 RUN git clone https://github.com/facefusion/facefusion.git --branch ${FACEFUSION_VERSION} --single-branch .
 RUN bash -c 'for i in /tmp/patch/*.patch; do patch -p 1 -r - --no-backup-if-mismatch < $i || true; done'
-RUN python install.py --onnxruntime default --skip-venv
+RUN python install.py --onnxruntime default --skip-conda
 
 RUN groupadd --gid ${DEFAULT_GID} ${PGROUP} && \
     useradd -m --uid ${DEFAULT_UID} --gid ${DEFAULT_GID} --home /home/${PUSER} ${PUSER} && \

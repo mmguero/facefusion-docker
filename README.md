@@ -25,19 +25,19 @@ echo -e "PUID=$(id -u)\nPGID=$(id -g)" > .env
 Run the `CPU` container:
 
 ```
-docker-compose -f docker-compose.cpu.yml up
+docker compose -f docker-compose.cpu.yml up
 ```
 
 Run the `CUDA` container:
 
 ```
-docker-compose -f docker-compose.cuda.yml up
+docker compose -f docker-compose.cuda.yml up
 ```
 
 Run the `ROCM` container:
 
 ```
-docker-compose -f docker-compose.rocm.yml up
+docker compose -f docker-compose.rocm.yml up
 ```
 
 
