@@ -3,10 +3,12 @@ services:
   build:
    context: .
    dockerfile: Dockerfile.rocm
-  command: [ 'python', 'run.py', '--execution-providers', 'rocm' ]
+  command: [ 'python', 'facefusion.py', 'run', '--execution-providers', 'rocm' ]
   env_file: .env
   volumes:
   - .assets:/facefusion/.assets
+  - .caches:/facefusion/.caches
+  - .jobs:/facefusion/.jobs
   ports:
   - 127.0.0.1:7890:7860
   deploy:

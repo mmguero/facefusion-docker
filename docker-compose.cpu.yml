@@ -3,9 +3,11 @@ services:
   build:
    context: .
    dockerfile: Dockerfile.cpu
-  command: [ 'python', 'run.py' ]
+  command: [ 'python', 'facefusion.py', 'run' ]
   env_file: .env
   volumes:
   - .assets:/facefusion/.assets
+  - .caches:/facefusion/.caches
+  - .jobs:/facefusion/.jobs
   ports:
   - 127.0.0.1:7870:7860

@@ -3,14 +3,13 @@ services:
   build:
    context: .
    dockerfile: Dockerfile.cuda
-  command: [ 'python', 'facefusion.py', 'run', '--execution-providers', 'cuda' ]
-  env_file: .env
+  command: [ 'python', 'facefusion.py', 'run', '--execution-providers', 'tensorrt' ]
   volumes:
   - .assets:/facefusion/.assets
   - .caches:/facefusion/.caches
   - .jobs:/facefusion/.jobs
   ports:
-  - 127.0.0.7880:7860
+  - 7875:7860
   deploy:
    resources:
     reservations:
