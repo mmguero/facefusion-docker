@@ -1,3 +1,6 @@
+.assets
+.caches
+.jobs
 .idea
 .vscode
 .env
